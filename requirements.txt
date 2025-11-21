@@ -1,0 +1,15 @@
+# MongoDB
+pymongo>=4.6.0
+
+# Data Processing
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Data Collection
+kagglehub>=0.2.0
+
+# CLI & Progress
+tqdm>=4.65.0
+
+# Sentiment Analysis (if you're using it in recipe_app.py)
+textblob>=0.17.0
