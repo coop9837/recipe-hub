@@ -1,0 +1,38 @@
+services:
+  mongodb:
+    container_name: mymongo
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - recipe-network
+    volumes:
+      - ./data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  python-app:
+    image: python:3.9-slim
+    container_name: recipe-cli
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: >
+      bash -c "pip install -q pymongo textblob typing-extensions tqdm pandas kagglehub &&
+      python run_cli.py"
+    stdin_open: true
+    tty: true
+    networks:
+      - recipe-network
+    restart: unless-stopped
+
+networks:
+  recipe-network:
+    driver: bridge
